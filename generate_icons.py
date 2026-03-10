@@ -55,7 +55,7 @@ def main():
     # PNG source
     src = draw_icon(512)
     src.save("assets/icon.png")
-    print("✓ assets/icon.png")
+    print("OK assets/icon.png")
 
     # ICO (Windows) – multiple sizes
     sizes = [16, 32, 48, 64, 128, 256]
@@ -66,18 +66,18 @@ def main():
         sizes=[(s, s) for s in sizes],
         append_images=imgs[1:],
     )
-    print("✓ assets/icon.ico")
+    print("OK assets/icon.ico")
 
     # ICNS (macOS) – Pillow doesn't write icns natively on non-Mac.
     # On macOS, run:  iconutil -c icns assets/icon.iconset
     # Fallback: just copy the PNG and rename
     try:
         src.save("assets/icon.icns")
-        print("✓ assets/icon.icns")
+        print("OK assets/icon.icns")
     except Exception:
         import shutil
         shutil.copy("assets/icon.png", "assets/icon.icns")
-        print("⚠ assets/icon.icns (PNG copy – rebuild on macOS for proper .icns)")
+        print("WARN assets/icon.icns (PNG copy – rebuild on macOS for proper .icns)")
 
     print("\nAll icons generated in assets/")
 
