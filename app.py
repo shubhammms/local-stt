@@ -12,6 +12,7 @@ import ctypes
 import math
 import platform
 import random
+import socket
 import sys
 import threading
 import tkinter as tk
@@ -484,5 +485,18 @@ class LocalSTT:
 def _trunc(s: str, n: int) -> str:
     return s if len(s) <= n else s[:n - 1] + "…"
 
+def _acquire_instance_lock():
+    """Bind a local socket to ensure only one instance runs."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 0)
+    try:
+        sock.bind(("127.0.0.1", 47915))
+        return sock  # keep reference so it stays bound
+    except OSError:
+        return None  # when already running
+
 if __name__ == "__main__":
+    _lock = _acquire_instance_lock()
+    if _lock is None:
+        sys.exit(0)  # another instance is already running
     LocalSTT().run()
